@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import bgImage from '../assets/bg1.jpg';
+import { useState } from "react";
+import api from "../api"; // ✅ Correct way to import named export
+
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import bgImage from "../assets/bg1.jpg";
 
 function Login() {
-  const [form, setForm] = useState({ email: '', password: '' });
+  const [form, setForm] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -15,25 +16,33 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3000/login", form);
-      toast.success('Login successful');
+      const res = await api.post("/users/login", form);
 
+      toast.success("Login successful");
+      const { role } = res.data;
       setTimeout(() => {
-        if (res.data.role === 'admin') {
-          navigate('/admin-dashboard');
+        if (role === "admin") {
+          navigate("/admin-dashboard");
         } else {
-          navigate('/student-dashboard');
+          navigate("/student-dashboard");
         }
-      }, 1500);
+      }, 1000);
     } catch (err) {
-      toast.error('Login Failed: ' + (err.response?.data?.message || err.message));
+      toast.error(
+        "Login Failed: " + (err.response?.data?.message || err.message)
+      );
     }
   };
 
   return (
-    <div className=" min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" style={{ backgroundImage:`url(${bgImage})` }}>
+    <div
+      className=" min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Login</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+          Login
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-5">
           <input
             type="email"
@@ -59,7 +68,13 @@ function Login() {
           </button>
         </form>
         <p className="text-sm text-center mt-4 text-gray-600">
-          Don't have an account? <a href="/register" className="text-indigo-600 font-medium hover:underline">Register</a>
+          Don't have an account?{" "}
+          <a
+            href="/register"
+            className="text-indigo-600 font-medium hover:underline"
+          >
+            Register
+          </a>
         </p>
       </div>
       <ToastContainer position="top-right" />
