@@ -32,6 +32,11 @@ const userSchema = new mongoose.Schema({
     },
     dob: Date,
     phone: String,
+    image: {
+      data: Buffer,
+      contentType: String,
+    },
+    address: String,
   },
 });
 

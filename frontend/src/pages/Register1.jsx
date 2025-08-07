@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import api from "../api";
+import api from "../api"; // use the configured axios
 import bgImage from "../assets/bg1.jpg";
 
 function Register() {
@@ -17,37 +17,20 @@ function Register() {
     enrollmentYear: "",
     address: "",
     course: "",
-    image: null,
   });
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    setForm({
-      ...form,
-      [name]: files ? files[0] : value, // handle file separately
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      const formData = new FormData();
-      for (let key in form) {
-        if (form[key]) {
-          formData.append(key, form[key]);
-        }
-      }
-
-      const res = await api.post("/users/register", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const res = await api.post("/users/register", form);
 
       toast.success("Registration successful!");
 
@@ -75,8 +58,8 @@ function Register() {
       style={{ backgroundImage: `url(${bgImage})` }}
     >
       <form
-        onSubmit={handleSubmit}
         encType="multipart/form-data"
+        onSubmit={handleSubmit}
         className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md space-y-5"
       >
         <h2 className="text-2xl font-semibold text-center text-gray-800">
@@ -106,6 +89,7 @@ function Register() {
           required
           className="w-full p-3 border rounded-md"
         />
+
         <select
           name="role"
           onChange={handleChange}
@@ -147,17 +131,11 @@ function Register() {
           onChange={handleChange}
           className="w-full p-3 border rounded-md"
         />
+
         <input
           type="text"
           name="course"
           placeholder="Course"
-          onChange={handleChange}
-          className="w-full p-3 border rounded-md"
-        />
-        <input
-          type="text"
-          name="department"
-          placeholder="Department"
           onChange={handleChange}
           className="w-full p-3 border rounded-md"
         />
@@ -171,7 +149,7 @@ function Register() {
         <input
           type="file"
           name="image"
-          accept="image/*"
+          placeholder="Image"
           onChange={handleChange}
           className="w-full p-3 border rounded-md"
         />

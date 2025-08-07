@@ -3,6 +3,7 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 const expressSession = require("express-session");
 const usersRouter = require("./routes/usersRouter");
+const indexRouter = require("./routes/index");
 require("dotenv").config({ override: true });
 
 const flash = require("./middleware/flash");
@@ -35,4 +36,5 @@ app.use(
 app.use(flash);
 app.use(trimInput);
 app.use("/users", usersRouter);
+app.use("/", indexRouter);
 app.listen(process.env.PORT || 3000);

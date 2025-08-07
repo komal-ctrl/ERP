@@ -7,15 +7,11 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 
-  email: {
+  department: {
     type: String,
     required: true,
-    unique: true,
-    lowercase: true,
-    trim: true,
   },
-
-  department: {
+  course: {
     type: String,
     required: true,
   },

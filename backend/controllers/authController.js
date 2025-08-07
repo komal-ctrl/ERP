@@ -1,11 +1,25 @@
 const userModel = require("../models/user");
+const studentModel = require("../models/students");
+const teacherModel = require("../models/teachers");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { generateToken } = require("../utils/generateToken");
 
 module.exports.registerUser = async function (req, res) {
   try {
-    let { name, email, password, role, gender, dob, phone } = req.body;
+    let {
+      name,
+      email,
+      password,
+      role,
+      gender,
+      dob,
+      phone,
+      department,
+      enrollmentYear,
+      address,
+      course,
+    } = req.body;
     let user = await userModel.findOne({ email });
 
     if (user) {
@@ -22,11 +36,37 @@ module.exports.registerUser = async function (req, res) {
       email,
       password: hash,
       role,
-      profile: { gender, dob, phone },
+      profile: {
+        gender,
+        dob,
+        phone,
+        address,
+        image: {
+          data: req.file.buffer,
+          contentType: req.file.mimetype,
+        },
+      },
     });
 
     const token = generateToken(newUser);
     res.cookie("token", token, { httpOnly: true });
+    if (role == "student") {
+      await studentModel.create({
+        userId: newUser._id,
+        course,
+
+        department,
+
+        enrollmentYear,
+      });
+    }
+    if (role == "teacher") {
+      await teacherModel.create({
+        userId: newUser._id,
+
+        department,
+      });
+    }
 
     res.status(201).json({
       message: "Registration successful",
