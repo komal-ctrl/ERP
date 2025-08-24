@@ -1,40 +1,26 @@
-const express = require("express");
-const cookieParser = require("cookie-parser");
-const path = require("path");
-const expressSession = require("express-session");
-const usersRouter = require("./routes/usersRouter");
-const indexRouter = require("./routes/index");
-require("dotenv").config({ override: true });
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import authRouter from "./routes/auth.js";
+import connectToDatabase from "./db/db.js";
+import departmentRouter from "./routes/department.js";
+import settingRouter from "./routes/setting.js";
 
-const flash = require("./middleware/flash");
-const trimInput = require("./middleware/trimInput");
-const db = require("./config/mongoose-connection");
-
-const jwt = require("jsonwebtoken");
+import studentRouter from "./routes/student.js";
+// import salaryRouter from "./routes/salary.js";
+// import leaveRouter from "./routes/leave.js";
+dotenv.config();
+connectToDatabase();
 const app = express();
-const cors = require("cors");
-
-app.use(
-  cors({
-    origin: "http://localhost:5173", // default Vite port
-    credentials: true,
-  })
-);
-
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "public")));
-app.use(cookieParser());
-app.use(
-  expressSession({
-    resave: false,
-    saveUninitialized: false,
-    secret: process.env.EXPRESS_SESSION_SECRET,
-  })
-);
-
-app.use(flash);
-app.use(trimInput);
-app.use("/users", usersRouter);
-app.use("/", indexRouter);
-app.listen(process.env.PORT || 3000);
+app.use(express.static("public/uploads"));
+app.use("/api/auth", authRouter);
+app.use("/api/department", departmentRouter);
+app.use("/api/student", studentRouter);
+// app.use("/api/salary", salaryRouter);
+// app.use("/api/leave", leaveRouter);
+app.use("/api/setting", settingRouter);
+app.listen(process.env.PORT, () => {
+  console.log(`server is running on port ${process.env.PORT} `);
+});

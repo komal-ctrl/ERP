@@ -1,36 +1,50 @@
-import { useState } from "react";
-import api from "../api"; // ✅ Correct way to import named export
-
+import React, { useState } from "react";
+import axios from "axios";
+import { useAuth } from "../Context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import bgImage from "../assets/bg1.jpg";
 
 function Login() {
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [email, setEmail] = useState("");
+  const [password, setpassword] = useState("");
+  const [error, seterror] = useState(null);
+  const { login } = useAuth();
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const res = await api.post("/users/login", form);
 
-      toast.success("Login successful");
-      const { role } = res.data;
-      setTimeout(() => {
-        if (role === "admin") {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/login",
+        {
+          email,
+          password,
+        }
+      );
+      if (response.data.success) {
+        login(response.data.user);
+        localStorage.setItem("token", response.data.token);
+        if (response.data.user.role == "admin") {
           navigate("/admin-dashboard");
         } else {
-          navigate("/student-dashboard");
+          navigate("/employee-dashboard");
         }
-      }, 1000);
-    } catch (err) {
-      toast.error(
-        "Login Failed: " + (err.response?.data?.message || err.message)
-      );
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      if (
+        error.response &&
+        error.response.data &&
+        !error.response.data.success
+      ) {
+        seterror(error.response.data.error);
+      } else if (error.message) {
+        seterror(error.message);
+      } else {
+        seterror("Unknown error");
+      }
     }
   };
 
@@ -43,22 +57,23 @@ function Login() {
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Login
         </h2>
+        {error && <p className="text-red-500">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-5">
           <input
             type="email"
             name="email"
             placeholder="Email"
-            onChange={handleChange}
             required
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            onChange={(e) => setEmail(e.target.value)}
           />
           <input
             type="password"
             name="password"
             placeholder="Password"
-            onChange={handleChange}
             required
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            onChange={(e) => setpassword(e.target.value)}
           />
           <button
             type="submit"
@@ -77,7 +92,6 @@ function Login() {
           </a>
         </p>
       </div>
-      <ToastContainer position="top-right" />
     </div>
   );
 }

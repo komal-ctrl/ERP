@@ -1,34 +1,86 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-// import AdminProfile from "./pages/AdminProfile";
-import AdminDashboard from "./pages/AdminDashboard";
-import StudentDashboard from "./pages/StudentDashboard";
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
-// import StudentProfile from "./pages/StudentProfile";
-import Profile from "./pages/Profile";
+import AdminDashboard from "./pages/AdminDashboard";
+import PrivateRoutes from "./utils/PrivateRoutes";
+import RoleBasedRoutes from "./utils/RoleBasedRoutes";
+import AdminSummary from "./components/admin/AdminSummary";
 
-import "./App.css";
+import AddDepartment from "./components/departments/AddDepartment";
+import EditDepartment from "./components/departments/EditDepartment";
+import DepartmentList from "./components/departments/List";
+import StudentList from "./components/student/List";
+import AddStudent from "./components/student/Add";
+import View from "./components/student/View";
+import EditStudent from "./components/student/Edit";
+import AddProgram from "./components/Program/AddProgram";
+import EditProgram from "./components/Program/Edit";
+import ProgramList from "./components/Program/List";
+import Setting from "./components/studentDashboard/Setting";
 
 function App() {
   return (
     <BrowserRouter>
-      <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/student-dashboard" element={<StudentDashboard />} />
-        {/* <Route
-          path="/student-profile"
-          element={<StudentProfile student={studentData} />}
-        /> */}
-        <Route path="/profile" element={<Profile />} />
-        {/* <Route
-          path="/admin-profile"
-          element={<AdminProfile admin={adminData} />}
-        /> */}
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/admin-dashboard"
+          element={
+            <PrivateRoutes>
+              <RoleBasedRoutes requiredRole={["admin"]}>
+                <AdminDashboard></AdminDashboard>
+              </RoleBasedRoutes>
+            </PrivateRoutes>
+          }
+        >
+          <Route index element={<AdminSummary />}></Route>
+          <Route
+            path="/admin-dashboard/departments"
+            element={<DepartmentList />}
+          ></Route>
+          <Route
+            path="/admin-dashboard/add-department"
+            element={<AddDepartment />}
+          ></Route>
+          <Route
+            path="/admin-dashboard/department/:id"
+            element={<EditDepartment />}
+          ></Route>
+          <Route
+            path="/admin-dashboard/programs"
+            element={<ProgramList />}
+          ></Route>
+          <Route
+            path="/admin-dashboard/add-Program"
+            element={<AddProgram />}
+          ></Route>
+          <Route
+            path="/admin-dashboard/program/:id"
+            element={<EditProgram />}
+          ></Route>
+          <Route
+            path="/admin-dashboard/students"
+            element={<StudentList />}
+          ></Route>
+          <Route
+            path="/admin-dashboard/add-students"
+            element={<AddStudent />}
+          ></Route>
+          <Route
+            path="/admin-dashboard/students/:id"
+            element={<View />}
+          ></Route>
+          <Route
+            path="/admin-dashboard/students/edit/:id"
+            element={<EditStudent />}
+          ></Route>
+          <Route
+            path="/admin-dashboard/students/edit/:id"
+            element={<EditStudent />}
+          ></Route>
+          <Route path="/admin-dashboard/setting" element={<Setting />}></Route>
+        </Route>
       </Routes>
     </BrowserRouter>
   );

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose, { Schema } from "mongoose";
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -9,9 +9,6 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    // unique: true,
-    lowercase: true,
-    trim: true,
   },
 
   password: {
@@ -25,19 +22,12 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 
-  profile: {
-    gender: {
-      type: String,
-      enum: ["male", "female", "other"],
-    },
-    dob: Date,
-    phone: String,
-    image: {
-      data: Buffer,
-      contentType: String,
-    },
-    address: String,
+  profileImage: {
+    type: String,
   },
+  createAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
+export default User;
