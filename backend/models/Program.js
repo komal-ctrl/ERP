@@ -30,7 +30,6 @@ programSchema.pre(
       const userIds = students.map((emp) => emp.userId);
       await Student.deleteMany({ program: this._id });
       await Course.deleteMany({ program: this._id });
-      console.log("User IDs to delete:", userIds);
 
       // await Leave.deleteMany({ studentId: { $in: stuIds } });
       // await Salary.deleteMany({ employeeId: { $in: empIds } });

@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuth } from "../../Context/AuthProvider.jsx";
+import { useAuth } from "../../Context/AuthContext.jsx";
 
 const Navbar = () => {
   const { user, logout } = useAuth();

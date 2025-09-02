@@ -17,7 +17,7 @@ const login = async (req, res) => {
       process.env.JWT_KEY,
       { expiresIn: "10d" }
     );
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       token,
       user: { _id: user._id, name: user.name, role: user.role },
@@ -25,7 +25,7 @@ const login = async (req, res) => {
   } catch (error) {
     console.log(error.message);
 
-    res.status(500).json({ success: false, error: error.message });
+    return res.status(500).json({ success: false, error: error.message });
   }
 };
 

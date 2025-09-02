@@ -8,7 +8,8 @@ import settingRouter from "./routes/setting.js";
 
 import studentRouter from "./routes/student.js";
 // import salaryRouter from "./routes/salary.js";
-// import leaveRouter from "./routes/leave.js";
+import leaveRouter from "./routes/leave.js";
+import notificationRouter from "./routes/notification.js";
 dotenv.config();
 connectToDatabase();
 const app = express();
@@ -19,8 +20,9 @@ app.use("/api/auth", authRouter);
 app.use("/api/department", departmentRouter);
 app.use("/api/student", studentRouter);
 // app.use("/api/salary", salaryRouter);
-// app.use("/api/leave", leaveRouter);
+app.use("/api/leave", leaveRouter);
 app.use("/api/setting", settingRouter);
+app.use("/api/notifications", notificationRouter);
 app.listen(process.env.PORT, () => {
   console.log(`server is running on port ${process.env.PORT} `);
 });

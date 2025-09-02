@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useAuth } from "../Context/AuthProvider";
+import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import bgImage from "../assets/bg1.jpg";
@@ -29,7 +29,7 @@ function Login() {
         if (response.data.user.role == "admin") {
           navigate("/admin-dashboard");
         } else {
-          navigate("/employee-dashboard");
+          navigate("/student-dashboard");
         }
       }
     } catch (error) {

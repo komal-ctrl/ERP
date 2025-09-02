@@ -112,14 +112,14 @@ export const StudentButtons = ({ ID }) => {
       >
         Salary
       </button> */}
-      {/* <button
+      <button
         className="px-4 py-1 bg-red-600"
         onClick={() => {
-          navigate(`/admin-dashboard/employees/leaves/${ID}`);
+          navigate(`/admin-dashboard/students/leaves/${ID}`);
         }}
       >
         Leave
-      </button> */}
+      </button>
     </div>
   );
 };

@@ -47,7 +47,7 @@ const View = () => {
                 <p className="font-medium">{student.userId.name}</p>
               </div>
               <div className="flex space-x-3 mb-5">
-                <p className="text-lg font-bold">Employee ID:</p>
+                <p className="text-lg font-bold">Student ID:</p>
                 <p className="font-medium">{student.studentId}</p>
               </div>
               <div className="flex space-x-3 mb-5">

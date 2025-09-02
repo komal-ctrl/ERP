@@ -20,4 +20,5 @@ const verifyUser = async (req, res, next) => {
     res.status(500).json({ sucess: false, error: "Server side Error" });
   }
 };
+
 export default verifyUser;
